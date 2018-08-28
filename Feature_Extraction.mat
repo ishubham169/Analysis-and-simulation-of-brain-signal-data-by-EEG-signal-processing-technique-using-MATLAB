@@ -1,0 +1,27 @@
+s.beg=1; % sample start point
+s.end=198784; %sample end
+data=ans(:,s.beg:s.end);     r=ans(:,1:198784);    s(:,:)=r;
+f=fdesign.notch('N,FO,Q',2,50,10,128);      h=design(f);
+ch_notch=filter(h,s);
+[b,a]=butter(3,[0.5,35]/64);
+fildata=filter(b,a,ch_notch);
+[b,a]=butter(4,[0.5,3]/64);
+pdelta=filter(b,a,ch_notch);
+[b,a]=butter(4,[8,13]/64);
+palpha1=filter(b,a,ch_notch);
+[b,a]=butter(4,[13,30]/64);
+pbeta1=filter(b,a,ch_notch);
+[b,a]=butter(4,[4,8]/64);
+ptheta=filter(b,a,ch_notch);
+[b,a]=butter(4,[30,35]/64);
+pgamma=filter(b,a,ch_notch);
+for i=1:16            pwrdelta(i)=(norm(pdelta(:,1:i)).^2)length(pdelta);end
+for i=1:16            pwralpha(i)=(norm(palpha1(:,1:i)).^2)length(palpha1);end
+for i=1:16            pwrbeta(i)=(norm(pbeta1(:,1:i)).^2)length(pbeta1);end
+for i=1:16           pwrgamma(i)=(norm(pgamma(:,1:i)).^2)length(pgamma);end
+for i=1:16           pwrtheta(i)=(norm(ptheta(:,1:i)).^2)length(ptheta);end
+for i=1:16;          engalpha1=(sum(palpha1(:,1:i)).^2);end
+for i=1:16;         engbeta1=(sum(pbeta1(:,1:i)).^2);end
+for i=1:16;         engtheta=(sum(ptheta(:,1:i)).^2);end
+for i=1:16;         engdelta=(sum(pdelta(:,1:i)).^2);end
+for i=1:16;         enggamma=(sum(pgamma(:,1:i)).^2);end
